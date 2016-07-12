@@ -179,12 +179,6 @@ class GraphQL {
             'message' => $e->getMessage()
         ];
         
-        $locations = $e->getLocations();
-        if(!empty($locations))
-        {
-            $error['locations'] = array_map(function($loc) { return $loc->toArray();}, $locations);
-        }
-        
         $previous = $e->getPrevious();
         if($previous && $previous instanceof ValidationError)
         {
