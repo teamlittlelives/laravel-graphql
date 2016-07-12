@@ -2,6 +2,7 @@
 
 use Illuminate\Routing\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class GraphQLController extends Controller {
     
@@ -14,8 +15,8 @@ class GraphQLController extends Controller {
         {
             $params = json_decode($params, true);
         }
-        
-        return app('graphql')->query($query, $params);
+        list($content, $status) = app('graphql')->query($query, $params);
+        return response()->json($content, $status);
     }
     
 }

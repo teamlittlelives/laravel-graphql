@@ -93,18 +93,23 @@ class GraphQL {
     public function query($query, $params = [])
     {
         $executionResult = $this->queryAndReturnResult($query, $params);
-        
         if (!empty($executionResult->errors))
         {
             return [
-                'data' => $executionResult->data,
-                'errors' => array_map([$this, 'formatError'], $executionResult->errors)
+                [
+                    'data' => $executionResult->data,
+                    'errors' => array_map([$this, 'formatError'], $executionResult->errors)
+                ],
+                $this->formatStatusCode($executionResult->errors)
             ];
         }
         else
         {
             return [
-                'data' => $executionResult->data
+                [
+                    'data' => $executionResult->data
+                ],
+                200
             ];
         }
     }
@@ -170,6 +175,7 @@ class GraphQL {
     public function formatError(Error $e)
     {
         $error = [
+            'code' => $e->getCode(),
             'message' => $e->getMessage()
         ];
         
@@ -186,5 +192,11 @@ class GraphQL {
         }
         
         return $error;
+    }    
+
+    public function formatStatusCode(Array $errors)
+    {
+        $e = $errors[0];
+        return $e->getStatusCode();
     }
 }
